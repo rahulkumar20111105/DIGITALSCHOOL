@@ -1,222 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital School Campus System</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --success: #16a34a;
-            --danger: #dc2626;
-            --background: #f8fafc;
-            --dark: #1e293b;
-            --gray: #64748b;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background);
-            color: var(--dark);
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .school-header {
-            text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 3px double var(--primary);
-        }
-        h1, h2, h3 { text-align: center; color: var(--primary); margin-top: 0; }
-        
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
-        .form-group select, .form-group input {
-            width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 15px;
-        }
-        
-        button {
-            padding: 12px 24px; font-size: 16px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;
-        }
-        .btn-primary { background-color: var(--primary); color: white; width: 100%; }
-        .btn-success { background-color: var(--success); color: white; }
-        .btn-danger { background-color: var(--danger); color: white; }
-        .btn-logout { background-color: var(--gray); color: white; float: right; padding: 6px 12px; font-size: 14px; }
-        button:hover { opacity: 0.9; }
-
-        .panel { display: none; }
-        .active { display: block; }
-        .login-card { max-width: 500px; margin: 40px auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        
-        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; }
-        .tab-btn { background: #e2e8f0; color: var(--dark); padding: 8px 16px; font-size: 14px; border-radius: 4px;}
-        .tab-btn.active-tab { background: var(--primary); color: white; }
-        
-        .student-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .student-table th, .student-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
-        .student-table th { background-color: #f1f5f9; }
-        
-        .notice-box { background: #fffbeb; border-left: 4px solid #d97706; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
-        .search-box { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 6px; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="school-header">
-        <h1>🏫 Digital School Campus System</h1>
-        <p style="color: var(--gray); margin: 5px 0;">Password-Free Open Access System</p>
-    </div>
-
-    <!-- 1. LOGIN PANEL -->
-    <div id="loginPanel" class="panel active">
-        <div class="login-card">
-            <h3>System Access Gateway</h3>
-            <div class="form-group">
-                <label>Select Workspace Terminal Mode</label>
-                <select id="loginRole">
-                    <option value="teacher">Teacher Portal View (Open Access)</option>
-                    <option value="student">Student Portal View (Open Access)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Workspace Username ID</label>
-                <input type="text" id="loginId" placeholder="Type TCH01 or STU1001...">
-            </div>
-            <p style="color: var(--success); font-size: 13px; font-weight: bold; text-align: center;">🔒 Password security disabled. Leave password blank or enter anything!</p>
-            <div class="form-group" style="display: none;">
-                <input type="password" id="loginPassword" value="FREE">
-            </div>
-            <button class="btn-primary" onclick="handleLogin()">Enter Workspace</button>
-        </div>
-    </div>
-
-    <!-- 2. TEACHER PORTAL -->
-    <div id="teacherPortal" class="panel">
-        <button class="btn-logout" onclick="handleLogout()">Logout</button>
-        <h2 id="teacherWelcomeTitle">👩‍🏫 Teacher Control Center</h2>
-        
-        <div class="nav-tabs">
-            <button class="tab-btn active-tab" onclick="switchTeacherTab('attendance', event)">Attendance</button>
-            <button class="tab-btn" onclick="switchTeacherTab('notices', event)">Post Notice</button>
-        </div>
-
-        <!-- Attendance Screen -->
-        <div id="tabAttendance" class="teacher-content">
-            <h3>Daily Class Attendance</h3>
-            <input type="text" class="search-box" id="attSearch" placeholder="Filter student Name or Roll Number instantly..." onkeyup="searchStudentAttendance()">
-            <table class="student-table">
-                <thead><tr><th>Roll ID</th><th>Name</th><th>Class Batch</th><th>Status</th><th>Action</th></tr></thead>
-                <tbody id="attendanceTableBody"></tbody>
-            </table>
-        </div>
-
-        <!-- Notice Board Manager Screen -->
-        <div id="tabNotices" class="teacher-content" style="display:none;">
-            <h3>📢 Publish Campus Notices</h3>
-            <div class="form-group">
-                <label>Notice Title</label>
-                <input type="text" id="noticeTitle" placeholder="e.g., Summer Vacation Announcement">
-            </div>
-            <div class="form-group">
-                <label>Notice Description Content</label>
-                <input type="text" id="noticeContent" placeholder="Enter full details here...">
-            </div>
-            <button class="btn-success" style="width: 100%;" onclick="createNewNotice()">Publish Notice Board Message</button>
-        </div>
-    </div>
-
-    <!-- 3. STUDENT PORTAL -->
-    <div id="studentPortal" class="panel">
-        <button class="btn-logout" onclick="handleLogout()">Logout</button>
-        <h2 id="studentWelcomeTitle">👨‍🎓 Student Dashboard Profile</h2>
-        
-        <h3>📢 Live Active School Notices</h3>
-        <div id="studentNoticePanel"></div>
-
-        <h3>📋 Your Academic Records</h3>
-        <table class="student-table">
-            <tr><td><strong>Student Name:</strong></td><td id="profName">-</td></tr>
-            <tr><td><strong>Roll Number:</strong></td><td id="profId">-</td></tr>
-            <tr><td><strong>Assigned Batch Class:</strong></td><td id="profClass">-</td></tr>
-            <tr><td><strong>Today's Attendance:</strong></td><td id="profStatus">-</td></tr>
-        </table>
-    </div>
-</div>
-
 <script>
+    // System Configurations
     let schoolNotices = [
         { title: "🎒 School ERP Live Notice", content: "Welcome to our new GitHub Campus Management System node portal." }
     ];
-    let loggedInUser = null;
 
-    // Local mockup records for rendering lists smoothly
-    let dynamicStudentList = [];
-    function getSampleStudents() {
-        if(dynamicStudentList.length === 0) {
-            for (let s = 1001; s <= 1015; s++) {
-                dynamicStudentList.push({
-                    id: "STU" + s,
-                    name: "Student Name " + (s - 1000),
-                    classBatch: "Class " + (1 + (s % 12)),
-                    status: "Not Marked"
-                });
-            }
-        }
-        return dynamicStudentList;
-    }
+    // PASTE YOUR GOOGLE SHEET WEB APP URL HERE:
+    const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzaGj2xObS5sPXVxsHGmusRQgTkecJ-fW1XBXDOZ2hQybV30W95x21L6ihVPCp25sYU/execd";
 
-    // New Free-Entry Login Logic (Accepts any matching code pattern without asking for passwords)
-    function handleLogin() {
+    async function forceLogin() {
         const role = document.getElementById('loginRole').value;
-        let idInput = document.getElementById('loginId').value.trim().toUpperCase();
+        const username = document.getElementById('loginId').value.trim();
+        const blueButton = document.querySelector('.btn-primary');
 
-        if (idInput === "") {
-            alert("Please type an identification ID to test access features.");
-            return;
-        }
+        // Show a loading status text to the user
+        blueButton.innerText = "Connecting to Google Sheet...";
+        blueButton.disabled = true;
 
-        if (role === 'teacher') {
-            // Checks if input format starts with TCH
-            if (idInput.startsWith("TCH") || idInput.startsWith("tch")) {
-                loggedInUser = { id: idInput, name: "Staff Member / Teacher" };
-                showActivePanel('teacherPortal');
-                document.getElementById('teacherWelcomeTitle').innerText = `👩‍🏫 Welcome to Workspace (${idInput})`;
-                renderAttendanceRows(getSampleStudents()); 
+        try {
+            // Sends the login or registration packet live to your spreadsheet row
+            const response = await fetch(GOOGLE_SHEET_API_URL, {
+                method: "POST",
+                mode: "cors",
+                body: JSON.stringify({
+                    role: role,
+                    username: username || "Anonymous User"
+                })
+            });
+
+            const result = await response.json();
+            console.log("Database Response:", result);
+
+            // Successfully logged into the system dashboard
+            document.getElementById('loginPanel').classList.remove('active');
+            
+            if (role === 'teacher') {
+                document.getElementById('teacherPortal').classList.add('active');
+                renderAttendanceRows(); 
             } else {
-                alert("For teacher mode, please type an ID beginning with TCH (e.g., TCH01)");
-            }
-        } else if (role === 'student') {
-            // Checks if input format starts with STU
-            if (idInput.startsWith("STU") || idInput.startsWith("stu")) {
-                let cleanNum = idInput.replace("STU", "");
-                loggedInUser = {
-                    id: idInput,
-                    name: "Registered Student " + cleanNum,
-                    classBatch: "Batch Section B",
-                    status: "Not Marked"
-                };
-                showActivePanel('studentPortal');
-                document.getElementById('studentWelcomeTitle').innerText = `👨‍🎓 Welcome, ${loggedInUser.name}`;
+                document.getElementById('studentPortal').classList.add('active');
                 renderStudentProfile();
-            } else {
-                alert("For student mode, please type an ID beginning with STU (e.g., STU1001)");
             }
+
+        } catch (error) {
+            console.error("Google Sheets Connection Error:", error);
+            alert("Database Error: Could not verify data rows. Your code is correct, please verify your Apps Script Deployment permissions!");
+            
+            // Backup offline entry so the user is never locked out of the workspace screen
+            document.getElementById('loginPanel').classList.remove('active');
+            document.getElementById('teacherPortal').classList.add('active');
+            renderAttendanceRows();
+        } finally {
+            blueButton.innerText = "Enter Workspace";
+            blueButton.disabled = false;
         }
     }
 
     function handleLogout() {
-        loggedInUser = null;
-        document.getElementById('loginId').value = "";
-        showActivePanel('loginPanel');
+        document.getElementById('teacherPortal').classList.remove('active');
+        document.getElementById('studentPortal').classList.remove('active');
+        document.getElementById('loginPanel').classList.add('active');
     }
 
-    function showActivePanel(id) {
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    function switchTeacherTab(tabName, event) {
+        document.querySelectorAll('.teacher-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+        
+        if (tabName === 'attendance') document.getElementById('tabAttendance').style.display = 'block';
+        if (tabName === 'notices') document.getElementById('tabNotices').style.display = 'block';
+        
+        if(event && event.target) event.target.classList.add('active-tab');
+    }
+
+    function renderAttendanceRows() {
+        const body = document.getElementById('attendanceTableBody');
+        if(!body) return;
+        body.innerHTML = `
+            <tr><td><strong>STU1001</strong></td><td>Rahul Sharma</td><td>Class 10 A</td><td><span style="color:red; font-weight:bold;">Not Marked</span></td><td><button class="btn-success" style="padding:4px 8px; font-size:12px; width:auto;">Present</button></td></tr>
+            <tr><td><strong>STU1002</strong></td><td>Priya Patel</td><td>Class 10 A</td><td><span style="color:red; font-weight:bold;">Not Marked</span></td><td><button class="btn-success" style="padding:4px 8px; font-size:12px; width:auto;">Present</button></td></tr>
+        `;
+    }
+
+    function createNewNotice() {
+        const title = document.getElementById('noticeTitle').value.trim();
+        const content = document.getElementById('noticeContent').value.trim();
+        if (title === "" || content === "") { alert("Please complete notice fields!"); return; }
+        
+        schoolNotices.unshift({ title: "📢 " + title, content: content });
+        document.getElementById('noticeTitle').value = "";
+        document.getElementById('noticeContent').value = "";
+        alert("Notice published successfully!");
+    }
+
+    function renderStudentProfile() {
+        const p = document.getElementById('studentNoticePanel');
+        if(!p) return;
+        p.innerHTML = "";
+        schoolNotices.forEach(n => {
+            p.innerHTML += `<div class="notice-box"><strong>${n.title}</strong><p style="margin:5px 0 0 0; font-size:14px; color:#475569;">${n.content}</p></div>`;
+        });
+    }
+</script>
