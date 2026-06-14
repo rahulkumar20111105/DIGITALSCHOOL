@@ -71,28 +71,28 @@
 
 <div class="container">
     <div class="school-header">
-        <h1 id="displaySchoolName">🏫 Digital School Campus System</h1>
-        <p style="color: var(--gray); margin: 5px 0;">All-In-One Local Cloud ERP Portal</p>
+        <h1>🏫 Digital School Campus System</h1>
+        <p style="color: var(--gray); margin: 5px 0;">Password-Free Open Access System</p>
     </div>
 
     <!-- 1. LOGIN PANEL -->
     <div id="loginPanel" class="panel active">
         <div class="login-card">
-            <h3>System Sign-In</h3>
+            <h3>System Access Gateway</h3>
             <div class="form-group">
                 <label>Select Workspace Terminal Mode</label>
                 <select id="loginRole">
-                    <option value="teacher">Teacher Terminal Access Node (100 Accounts)</option>
-                    <option value="student">Student Terminal Access Node (5,000 Accounts)</option>
+                    <option value="teacher">Teacher Portal View (Open Access)</option>
+                    <option value="student">Student Portal View (Open Access)</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Workspace Username ID</label>
-                <input type="text" id="loginId" placeholder="e.g., TCH01 or STU1001">
+                <input type="text" id="loginId" placeholder="Type TCH01 or STU1001...">
             </div>
-            <div class="form-group">
-                <label>Access Credential Passcode</label>
-                <input type="password" id="loginPassword" placeholder="••••••••••••">
+            <p style="color: var(--success); font-size: 13px; font-weight: bold; text-align: center;">🔒 Password security disabled. Leave password blank or enter anything!</p>
+            <div class="form-group" style="display: none;">
+                <input type="password" id="loginPassword" value="FREE">
             </div>
             <button class="btn-primary" onclick="handleLogin()">Enter Workspace</button>
         </div>
@@ -105,27 +105,16 @@
         
         <div class="nav-tabs">
             <button class="tab-btn active-tab" onclick="switchTeacherTab('attendance', event)">Attendance</button>
-            <button class="tab-btn" onclick="switchTeacherTab('passwords', event)">Manage Passwords</button>
             <button class="tab-btn" onclick="switchTeacherTab('notices', event)">Post Notice</button>
         </div>
 
         <!-- Attendance Screen -->
         <div id="tabAttendance" class="teacher-content">
             <h3>Daily Class Attendance</h3>
-            <input type="text" class="search-box" id="attSearch" placeholder="Type student Name or Roll Number to filter instantly..." onkeyup="searchStudentAttendance()">
+            <input type="text" class="search-box" id="attSearch" placeholder="Filter student Name or Roll Number instantly..." onkeyup="searchStudentAttendance()">
             <table class="student-table">
                 <thead><tr><th>Roll ID</th><th>Name</th><th>Class Batch</th><th>Status</th><th>Action</th></tr></thead>
                 <tbody id="attendanceTableBody"></tbody>
-            </table>
-        </div>
-
-        <!-- Password Manager Screen -->
-        <div id="tabPasswords" class="teacher-content" style="display:none;">
-            <h3>🔑 Security Credentials Manager</h3>
-            <input type="text" class="search-box" id="passSearch" placeholder="Search Student details to change password..." onkeyup="searchStudentPasswords()">
-            <table class="student-table">
-                <thead><tr><th>Roll ID</th><th>Name</th><th>Password Key</th><th>Action</th></tr></thead>
-                <tbody id="passwordTableBody"></tbody>
             </table>
         </div>
 
@@ -168,50 +157,14 @@
     ];
     let loggedInUser = null;
 
-    // Fast, lightweight on-demand account validation (Fixes browser crash)
-    function validateTeacher(idInput, passwordInput) {
-        // Automatically check patterns for TCH01 up to TCH100 without looping 100 times
-        let match = idInput.match(/^TCH0*([1-9]\d*)$/);
-        if (match) {
-            let num = parseInt(match[1]);
-            if (num >= 1 && num <= 100) {
-                let formattedId = "TCH" + (num < 10 ? "0" + num : num);
-                let expectedPassword = "teachpass" + (num < 10 ? "0" + num : num);
-                if (passwordInput === expectedPassword) {
-                    return { id: formattedId, name: "Teacher Professor " + num };
-                }
-            }
-        }
-        return null;
-    }
-
-    function validateStudent(idInput, passwordInput) {
-        // Automatically checks patterns for STU1001 up to STU6000 instantly
-        let match = idInput.match(/^STU(100[1-9]|10[1-9]\d|1[1-9]\d{2}|[2-5]\d{3}|6000)$/);
-        if (match) {
-            let num = parseInt(match[1]);
-            let expectedPassword = "studpass" + num;
-            if (passwordInput === expectedPassword) {
-                return {
-                    id: "STU" + num,
-                    name: "Student Name " + (num - 1000),
-                    classBatch: "Class " + (1 + (num % 12)),
-                    status: "Not Marked"
-                };
-            }
-        }
-        return null;
-    }
-
-    // High performance localized database array for search dashboard grids
+    // Local mockup records for rendering lists smoothly
     let dynamicStudentList = [];
     function getSampleStudents() {
         if(dynamicStudentList.length === 0) {
-            for (let s = 1001; s <= 1010; s++) {
+            for (let s = 1001; s <= 1015; s++) {
                 dynamicStudentList.push({
                     id: "STU" + s,
                     name: "Student Name " + (s - 1000),
-                    password: "studpass" + s,
                     classBatch: "Class " + (1 + (s % 12)),
                     status: "Not Marked"
                 });
@@ -220,3 +173,50 @@
         return dynamicStudentList;
     }
 
+    // New Free-Entry Login Logic (Accepts any matching code pattern without asking for passwords)
+    function handleLogin() {
+        const role = document.getElementById('loginRole').value;
+        let idInput = document.getElementById('loginId').value.trim().toUpperCase();
+
+        if (idInput === "") {
+            alert("Please type an identification ID to test access features.");
+            return;
+        }
+
+        if (role === 'teacher') {
+            // Checks if input format starts with TCH
+            if (idInput.startsWith("TCH") || idInput.startsWith("tch")) {
+                loggedInUser = { id: idInput, name: "Staff Member / Teacher" };
+                showActivePanel('teacherPortal');
+                document.getElementById('teacherWelcomeTitle').innerText = `👩‍🏫 Welcome to Workspace (${idInput})`;
+                renderAttendanceRows(getSampleStudents()); 
+            } else {
+                alert("For teacher mode, please type an ID beginning with TCH (e.g., TCH01)");
+            }
+        } else if (role === 'student') {
+            // Checks if input format starts with STU
+            if (idInput.startsWith("STU") || idInput.startsWith("stu")) {
+                let cleanNum = idInput.replace("STU", "");
+                loggedInUser = {
+                    id: idInput,
+                    name: "Registered Student " + cleanNum,
+                    classBatch: "Batch Section B",
+                    status: "Not Marked"
+                };
+                showActivePanel('studentPortal');
+                document.getElementById('studentWelcomeTitle').innerText = `👨‍🎓 Welcome, ${loggedInUser.name}`;
+                renderStudentProfile();
+            } else {
+                alert("For student mode, please type an ID beginning with STU (e.g., STU1001)");
+            }
+        }
+    }
+
+    function handleLogout() {
+        loggedInUser = null;
+        document.getElementById('loginId').value = "";
+        showActivePanel('loginPanel');
+    }
+
+    function showActivePanel(id) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
