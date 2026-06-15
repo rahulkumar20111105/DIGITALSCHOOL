@@ -5,71 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Coaching Hub Pro</title>
     <style>
-        /* Premium Midnight Theme CSS Layout Setup */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background-color: #0b0f19; color: #f3f4f6; padding-bottom: 95px; }
-        
         header { background: #111827; padding: 16px; text-align: center; border-bottom: 2px solid #1f2937; }
         header h1 { color: #6366f1; font-size: 22px; font-weight: 700; }
-        
         .app-container { max-width: 500px; padding: 0 12px; margin: 0 auto; }
         .app-screen { display: none; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); margin-top: 15px; }
         .app-screen.active { display: block; }
-        
-        h2 { font-size: 15px; font-weight: 600; margin-bottom: 12px; border-left: 4px solid #6366f1; padding-left: 8px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
-        
+        h2 { font-size: 15px; font-weight: 600; margin-bottom: 12px; border-left: 4px solid #6366f1; padding-left: 8px; color: #ffffff; text-transform: uppercase; }
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 10px; color: #9ca3af; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; }
         input[type="text"], input[type="number"], select { width: 100%; background: #1f2937; border: 1px solid #374151; color: #ffffff; padding: 10px; border-radius: 8px; font-size: 13px; outline: none; }
-        
-        .btn-primary { width: 100%; background: #6366f1; color: #ffffff; padding: 11px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; text-transform: uppercase; margin-top: 5px; }
-        .btn-primary:hover { background: #4f46e5; }
+        .btn-primary { width: 100%; background: #6366f1; color: #ffffff; padding: 11px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; text-transform: uppercase; margin-top: 5px; }
         .btn-action { background: #1f2937; color: #ffffff; border: 1px solid #374151; padding: 5px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; }
-        
         .item-card { background: #1f2937; border: 1px solid #374151; padding: 12px; border-radius: 10px; margin-bottom: 10px; }
-        
-        /* TRACKER MATRIX DISPLAY */
         .batch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
         .batch-box { background: #111827; border: 1px solid #374151; padding: 8px; border-radius: 8px; text-align: center; }
         .batch-title { font-size: 9px; font-weight: bold; color: #9ca3af; text-transform: uppercase; }
         .batch-count { font-size: 14px; font-weight: 800; margin-top: 2px; }
-
-        /* AI CHAT INTERFACE */
         .chat-box { background: #111827; border: 1px solid #374151; border-radius: 10px; height: 200px; overflow-y: auto; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .msg { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 13px; line-height: 1.4; }
-        .msg.user { background: #6366f1; color: white; align-self: flex-end; border-bottom-right-radius: 0; }
-        .msg.ai { background: #1f2937; color: #f3f4f6; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #374151; }
-        
+        .msg { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 13px; }
+        .msg.user { background: #6366f1; color: white; align-self: flex-end; }
+        .msg.ai { background: #1f2937; color: #f3f4f6; align-self: flex-start; border: 1px solid #374151; }
         .attendance-actions { display: flex; gap: 6px; margin-top: 8px; }
         .btn-p, .btn-a { padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; border: none; color: white; }
         .btn-p { flex: 1; background: #374151; }
         .btn-a { flex: 2; background: #374151; }
         .btn-p.active { background: #10b981; }
         .btn-a.active { background: #ef4444; }
-
-        /* FACTORY PRINT AREA */
-        .doc-preview-area { background: #fff; color: #000; padding: 20px; border-radius: 8px; margin-top: 15px; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .doc-preview-area { background: #fff; color: #000; padding: 20px; border-radius: 8px; margin-top: 15px; display: none; }
         .id-card { border: 2px solid #6366f1; padding: 15px; border-radius: 8px; text-align: center; max-width: 250px; margin: 0 auto; background: #fff; color: #000; }
         .id-card-header { background: #6366f1; color: #fff; padding: 6px; font-weight: bold; font-size: 14px; border-radius: 4px; margin-bottom: 10px; }
         .report-card { border: 2px solid #1e3a8a; padding: 15px; background: #fff; color: #000; }
         .report-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-        .report-table th, .report-table td { border: 1px solid #ccc; padding: 6px; text-align: left; }
-
-        .receipt-box { border: 2px dashed #10b981; padding: 20px; background: #ffffff; color: #000000; font-size: 13px; border-radius: 6px; line-height: 1.6; }
+        .report-table th, .report-table td { border: 1px solid #ccc; padding: 6px; }
+        .receipt-box { border: 2px dashed #10b981; padding: 20px; background: #ffffff; color: #000000; font-size: 13px; border-radius: 6px; }
         .receipt-header { border-bottom: 2px dashed #10b981; text-align: center; padding-bottom: 8px; margin-bottom: 12px; }
         .receipt-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
-
-        /* FIXED FLOATING MENU BAR (Always Visible Now) */
         nav { position: fixed; bottom: 0; left: 0; right: 0; background: #111827; border-top: 1px solid #1f2937; padding: 12px 0; z-index: 1000; }
         .nav-wrapper { max-width: 500px; margin: 0 auto; display: flex; justify-content: space-around; }
         .nav-btn { background: none; border: none; color: #9ca3af; font-size: 11px; font-weight: 500; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 20%; }
         .nav-btn.active { color: #6366f1; font-weight: bold; }
         .nav-btn span { font-size: 16px; }
-
         @media print {
-            body { background: white; color: black; padding: 0; }
             nav, header, h2, .item-card, .btn-primary { display: none !important; }
-            .doc-preview-area { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }
+            .doc-preview-area { display: block !important; }
         }
     </style>
 </head>
@@ -80,15 +60,13 @@
     </header>
 
     <main class="app-container">
-
-        <!-- SCREEN 1: ADMISSIONS PANEL (Active by Default) -->
+        <!-- SCREEN 1: ADMISSIONS PANEL -->
         <section id="screen-students" class="app-screen active">
             <h2>📊 Live Batch Size Tracker</h2>
-            <div class="batch-grid" style="grid-template-columns: 1fr 1fr; gap:8px;">
+            <div class="batch-grid">
                 <div class="batch-box"><span class="batch-title">Morning Batch</span><div class="batch-count" id="count-morning" style="color:#10b981;">1 Students</div></div>
                 <div class="batch-box"><span class="batch-title">Evening Batch</span><div class="batch-count" id="count-evening" style="color:#10b981;">1 Students</div></div>
             </div>
-
             <h2>👤 New Student Admission Form</h2>
             <div class="item-card">
                 <div class="form-group"><label>Student Full Name</label><input id="form-name" type="text" placeholder="e.g. Rahul Kumar"></div>
@@ -100,7 +78,6 @@
                 <div class="form-group"><label>Total Admission Fees (₹)</label><input id="form-fees" type="number" value="10000"></div>
                 <button onclick="admitStudent()" class="btn-primary">Generate Credentials & Enroll</button>
             </div>
-
             <h2>👥 Active Registered Student Base</h2>
             <div id="master-student-list"></div>
         </section>
@@ -113,20 +90,12 @@
                 <div class="batch-box"><span class="batch-title">Collected</span><div class="batch-count" style="color:#10b981;" id="m-paid">₹11,000</div></div>
                 <div class="batch-box"><span class="batch-title">Pending Dues</span><div class="batch-count" style="color:#ef4444;" id="m-dues">₹9,000</div></div>
             </div>
-
             <h2>💵 Process Payment & Generate PDF Receipt</h2>
             <div class="item-card">
-                <div class="form-group">
-                    <label>Select Student Target</label>
-                    <select id="fee-student-select"></select>
-                </div>
-                <div class="form-group">
-                    <label>Amount Received (₹)</label>
-                    <input id="fee-amount-input" type="number" placeholder="e.g. 2000">
-                </div>
+                <div class="form-group"><label>Select Student Target</label><select id="fee-student-select"></select></div>
+                <div class="form-group"><label>Amount Received (₹)</label><input id="fee-amount-input" type="number" placeholder="e.g. 2000"></div>
                 <button onclick="processFeePayment()" class="btn-primary" style="background:#10b981;">Log Entry & Create Receipt</button>
             </div>
-
             <h2>📋 Active Fee Accounts Status</h2>
             <div id="ledger-list-container"></div>
         </section>
@@ -147,3 +116,10 @@
         <section id="screen-docs" class="app-screen">
             <h2>Automated Document Factory</h2>
             <div class="item-card">
+                <h3 style="font-size:13px; color:#fff; margin-bottom:6px;">1. ID Card / Report Card Generator</h3>
+                <div class="form-group"><select id="doc-student-select" onchange="syncResultScores()"></select></div>
+                <div class="form-group"><input type="number" id="score-phy" placeholder="Physics Score"></div>
+                <div class="form-group"><input type="number" id="score-chem" placeholder="Chemistry Score"></div>
+                <div class="form-group"><input type="number" id="score-math" placeholder="Maths Score"></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                    <button onclick="generateIdCard()" class="btn-action" style="background:#6366f1; color:white;">Print Student ID</button>
