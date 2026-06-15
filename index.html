@@ -20,7 +20,7 @@
         
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 10px; color: #9ca3af; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; }
-        input[type="text"], input[type="number"], select { width: 100%; background: #1f2937; border: 1px solid #374151; color: #ffffff; padding: 10px; border-radius: 8px; font-size: 13px; outline: none; }
+        input[type="text"], input[type="number"], input[type="password"], select { width: 100%; background: #1f2937; border: 1px solid #374151; color: #ffffff; padding: 10px; border-radius: 8px; font-size: 13px; outline: none; }
         
         .btn-primary { width: 100%; background: #6366f1; color: #ffffff; padding: 11px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; text-transform: uppercase; margin-top: 5px; }
         .btn-primary:hover { background: #4f46e5; }
@@ -61,7 +61,7 @@
         .receipt-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
 
         /* FIXED FLOATING NAVIGATION MENU BAR AT THE BOTTOM */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #111827; border-top: 1px solid #1f2937; padding: 12px 0; z-index: 1000; display: block !important; }
+        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #111827; border-top: 1px solid #1f2937; padding: 12px 0; z-index: 1000; display: none; }
         .nav-wrapper { max-width: 500px; margin: 0 auto; display: flex; justify-content: space-around; }
         .nav-btn { background: none; border: none; color: #9ca3af; font-size: 11px; font-weight: 500; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 20%; }
         .nav-btn.active { color: #6366f1; font-weight: bold; }
@@ -82,8 +82,21 @@
 
     <main class="app-container">
 
+        <!-- TEACHER LOGIN SECURITY SCREEN -->
+        <section id="screen-login" class="app-screen active" style="margin-top: 50px;">
+            <h2>🔐 Teacher Access Verification</h2>
+            <div class="item-card">
+                <div class="form-group">
+                    <label>Enter Secret Teacher Password</label>
+                    <input id="teacher-password-input" type="password" placeholder="••••••••">
+                </div>
+                <button onclick="verifyTeacherLogin()" class="btn-primary">Unlock Application</button>
+                <p id="login-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 8px; display: none; text-align: center; font-weight: 600;">❌ Incorrect Password! Access Denied.</p>
+            </div>
+        </section>
+
         <!-- SCREEN 1: ADMISSION SECTION & TRACKERS -->
-        <section id="screen-students" class="app-screen active">
+        <section id="screen-students" class="app-screen">
             <h2>📊 Live Batch Size Tracker</h2>
             <div class="batch-grid" style="grid-template-columns: 1fr 1fr; gap:8px;">
                 <div class="batch-box"><span class="batch-title">Morning Batch</span><div class="batch-count" id="count-morning" style="color:#10b981;">1 Students</div></div>
@@ -133,17 +146,3 @@
         </section>
 
         <!-- SCREEN 3: 24x7 AI DOUBT SUPPORT -->
-        <section id="screen-ai" class="app-screen">
-            <h2>🤖 24x7 AI Doubt Support (Free)</h2>
-            <div class="chat-box" id="ai-chat-viewport">
-                <div class="msg ai">Hello! I am your AI Coaching Assistant. Type any academic doubt, and I will resolve it instantly!</div>
-            </div>
-            <div style="display: flex; gap: 6px;">
-                <input type="text" id="ai-input-box" placeholder="Type your doubt here...">
-                <button onclick="askAIEngine()" class="btn-action" style="background:#6366f1; font-weight:bold; padding:0 15px;">Ask AI</button>
-            </div>
-        </section>
-
-        <!-- SCREEN 4: DOCUMENT FACTORY -->
-        <section id="screen-docs" class="app-screen">
-            <h2>Automated Document Factory</h2>
