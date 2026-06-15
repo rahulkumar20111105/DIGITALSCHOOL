@@ -1,102 +1,175 @@
-<script>
-    // System Configurations
-    let schoolNotices = [
-        { title: "🎒 School ERP Live Notice", content: "Welcome to our new GitHub Campus Management System node portal." }
-    ];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All-In-One Smart Coaching Hub</title>
+    <!-- Tailwind CSS for clean app styling -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        .app-screen { display: none; }
+        .app-screen.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans pb-24">
 
-    // PASTE YOUR GOOGLE SHEET WEB APP URL HERE:
-    const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzaGj2xObS5sPXVxsHGmusRQgTkecJ-fW1XBXDOZ2hQybV30W95x21L6ihVPCp25sYU/exec";
+    <!-- TOP HEADER -->
+    <header class="bg-indigo-600 text-white text-center py-4 shadow-md sticky top-0 z-50">
+        <h1 class="text-xl font-bold tracking-wide">Smart Coaching App Engine</h1>
+    </header>
 
-    async function forceLogin() {
-        const role = document.getElementById('loginRole').value;
-        const username = document.getElementById('loginId').value.trim();
-        const blueButton = document.querySelector('.btn-primary');
+    <main class="max-w-md mx-auto p-4">
 
-        // Show loading text to the user
-        blueButton.innerText = "Connecting to Google Sheet...";
-        blueButton.disabled = true;
+        <!-- ==========================================
+             SCREEN 1: STUDENT MASTER & LOGINS
+             ========================================== -->
+        <section id="screen-students" class="app-screen active">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-gray-800">Student Database</h2>
+                <button onclick="toggleModal(true)" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold shadow hover:bg-indigo-700">+ Admit Student</button>
+            </div>
 
-        try {
-            // FIX: Sending data as text instead of a strict application/json payload bypasses Google's CORS blocks
-            const response = await fetch(GOOGLE_SHEET_API_URL, {
-                method: "POST",
-                mode: "no-cors", // Bypasses Google's strict browser response requirements
-                headers: {
-                    "Content-Type": "text/plain"
-                },
-                body: JSON.stringify({
-                    role: role,
-                    username: username || "Anonymous User"
-                })
-            });
+            <div id="student-list" class="space-y-3">
+                <!-- Dynamically populated by JS -->
+            </div>
 
-            // Proceed straight to the dashboard seamlessly
-            enterSystemDashboard(role);
+            <!-- Onboarding Pop-up Form Dialog -->
+            <div id="student-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+                <div class="bg-white rounded-xl p-5 w-full max-w-sm shadow-2xl">
+                    <h3 class="text-md font-bold mb-3 text-gray-800">Enroll New Student</h3>
+                    <div class="space-y-3">
+                        <input id="form-name" type="text" placeholder="Student Full Name" class="w-full border p-2 rounded-lg text-sm">
+                        <input id="form-phone" type="tel" placeholder="Parent 10-Digit Mobile" class="w-full border p-2 rounded-lg text-sm">
+                        <select id="form-batch" class="w-full border p-2 rounded-lg text-sm bg-white">
+                            <option value="Batch A (Morning)">Batch A (Morning)</option>
+                            <option value="Batch B (Evening)">Batch B (Evening)</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button onclick="toggleModal(false)" class="text-gray-500 text-sm px-3 py-2">Cancel</button>
+                        <button onclick="registerNewStudent()" class="bg-indigo-600 text-white text-sm px-4 py-2 rounded-lg font-semibold">Generate ID & Save</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        } catch (error) {
-            console.error("Google Sheets Connection Error:", error);
-            // Offline backup fallback option so the application never breaks
-            enterSystemDashboard(role);
-        } finally {
-            blueButton.innerText = "Enter Workspace";
-            blueButton.disabled = false;
+        <!-- ==========================================
+             SCREEN 2: REAL-TIME ATTENDANCE PANEL
+             ========================================== -->
+        <section id="screen-attendance" class="app-screen">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-gray-800">Daily Attendance</h2>
+                <button onclick="resetAttendance()" class="text-xs text-indigo-600 font-medium underline">Reset Sheets</button>
+            </div>
+            <div id="attendance-list" class="space-y-3">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 3: CLASSROOM CONTENT PLAYER
+             ========================================== -->
+        <section id="screen-classroom" class="app-screen">
+            <!-- Global Coaching Announcements / Notice Board -->
+            <div class="bg-amber-100 border-l-4 border-amber-500 p-3 rounded-r-lg mb-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-amber-600 font-bold">⚠️</span>
+                    <h4 class="text-xs font-bold text-amber-800 uppercase tracking-wide">Live Notice Board</h4>
+                </div>
+                <p id="notice-text" class="text-xs text-gray-700">Notice: Parent-Teacher Meeting (PTM) scheduled for this upcoming Sunday at 10:00 AM.</p>
+            </div>
+
+            <!-- Teacher Edit Session Timings Section -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border mb-5">
+                <h3 class="text-sm font-bold text-gray-800 mb-2">Teacher Access: Class Timing</h3>
+                <div class="flex items-center gap-3">
+                    <input id="input-class-time" type="text" value="08:00 AM to 02:00 PM (6 Hours)" class="flex-1 border p-1.5 rounded-lg text-sm bg-gray-50 text-indigo-700 font-semibold" readonly>
+                    <button id="btn-edit-time" onclick="toggleTimeEdit()" class="bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Edit</button>
+                </div>
+            </div>
+
+            <!-- 6-Hour Stream Component Wrapper -->
+            <h3 class="text-sm font-bold text-gray-800 mb-2">Today's 6-Hour Recorded Lecture Backup</h3>
+            <div class="bg-black text-white rounded-xl aspect-video flex flex-col items-center justify-center p-4 text-center shadow-lg relative mb-5 overflow-hidden">
+                <div class="text-red-500 text-4xl mb-2">▶️</div>
+                <p class="text-xs font-semibold">Click to Play Daily Stream Archive Session</p>
+                <p class="text-[10px] text-gray-400 mt-1">Saves server costs via YouTube Unlisted Protocol</p>
+                <a href="https://youtube.com" target="_blank" class="absolute inset-0 bg-transparent opacity-0 cursor-pointer">Open Video Stream</a>
+            </div>
+
+            <!-- Material Sharing Area -->
+            <h3 class="text-sm font-bold text-gray-800 mb-2">Shared PDFs & Materials</h3>
+            <div class="bg-white rounded-xl p-3 shadow-sm border flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-red-500 text-xl">📄</span>
+                    <div>
+                        <p class="text-xs font-bold text-gray-800">Chapter-04 Physics Notes Core.pdf</p>
+                        <p class="text-[10px] text-gray-400">Google Drive Linked • 4.2 MB</p>
+                    </div>
+                </div>
+                <button class="bg-gray-100 hover:bg-gray-200 p-1.5 rounded-lg text-gray-600 text-sm">📥</button>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 4: REPORT CARDS & FEE LEDGER
+             ========================================== -->
+        <section id="screen-ledger" class="app-screen">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">Exams & Financial Dues</h2>
+            <div id="ledger-list" class="space-y-3">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FLOATING APP BOTTOM NAVIGATION BAR -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-xl z-50">
+        <div class="max-w-md mx-auto flex justify-around text-center py-2 text-xs font-medium text-gray-500">
+            <button onclick="switchScreen('students')" class="flex flex-col items-center gap-1 flex-1 text-indigo-600" id="nav-students">
+                <span class="text-lg">👥</span> Students
+            </button>
+            <button onclick="switchScreen('attendance')" class="flex flex-col items-center gap-1 flex-1" id="nav-attendance">
+                <span class="text-lg">📋</span> Attendance
+            </button>
+            <button onclick="switchScreen('classroom')" class="flex flex-col items-center gap-1 flex-1" id="nav-classroom">
+                <span class="text-lg">💻</span> Classroom
+            </button>
+            <button onclick="switchScreen('ledger')" class="flex flex-col items-center gap-1 flex-1" id="nav-ledger">
+                <span class="text-lg">💰</span> Accounts
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==========================================
+         CENTRAL APPLICATION CORE LOGIC ENGINE
+         ========================================== -->
+    <script>
+        // Simulated Cloud Storage/Database Arrays
+        let students = [
+            { id: "COACH-001", name: "Rahul Maurya", batch: "Batch A (Morning)", password: "xY9312", phone: "919999999999", attendance: "Not Marked", totalFees: 10000, paidFees: 7000, examScore: 85 },
+            { id: "COACH-002", name: "Amit Kumar", batch: "Batch B (Evening)", password: "aK4721", phone: "918888888888", attendance: "Not Marked", totalFees: 10000, paidFees: 4000, examScore: 42 }
+        ];
+
+        // 1. NAVIGATION TAB ROUTER
+        function switchScreen(screenId) {
+            document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            
+            // Highlight active tab styles
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('text-indigo-600'));
+            document.getElementById(`nav-${screenId}`).classList.add('text-indigo-600');
         }
-    }
 
-    function enterSystemDashboard(role) {
-        document.getElementById('loginPanel').classList.remove('active');
-        
-        if (role === 'teacher') {
-            document.getElementById('teacherPortal').classList.add('active');
-            renderAttendanceRows(); 
-        } else {
-            document.getElementById('studentPortal').classList.add('active');
-            renderStudentProfile();
+        // 2. MODAL FORM TOGGLE
+        function toggleModal(show) {
+            document.getElementById('student-modal').classList.toggle('hidden', !show);
         }
-    }
 
-    function handleLogout() {
-        document.getElementById('teacherPortal').classList.remove('active');
-        document.getElementById('studentPortal').classList.remove('active');
-        document.getElementById('loginPanel').classList.add('active');
-    }
+        // 3. STUDENT REGISTRATION ENGINE (With Random Secure Passwords)
+        function registerNewStudent() {
+            const name = document.getElementById('form-name').value;
+            let phone = document.getElementById('form-phone').value;
+            const batch = document.getElementById('form-batch').value;
 
-    function switchTeacherTab(tabName, event) {
-        document.querySelectorAll('.teacher-content').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
-        
-        if (tabName === 'attendance') document.getElementById('tabAttendance').style.display = 'block';
-        if (tabName === 'notices') document.getElementById('tabNotices').style.display = 'block';
-        
-        if(event && event.target) event.target.classList.add('active-tab');
-    }
-
-    function renderAttendanceRows() {
-        const body = document.getElementById('attendanceTableBody');
-        if(!body) return;
-        body.innerHTML = `
-            <tr><td><strong>STU1001</strong></td><td>Rahul Sharma</td><td>Class 10 A</td><td><span style="color:red; font-weight:bold;">Not Marked</span></td><td><button class="btn-success" style="padding:4px 8px; font-size:12px; width:auto;">Present</button></td></tr>
-            <tr><td><strong>STU1002</strong></td><td>Priya Patel</td><td>Class 10 A</td><td><span style="color:red; font-weight:bold;">Not Marked</span></td><td><button class="btn-success" style="padding:4px 8px; font-size:12px; width:auto;">Present</button></td></tr>
-        `;
-    }
-
-    function createNewNotice() {
-        const title = document.getElementById('noticeTitle').value.trim();
-        const content = document.getElementById('noticeContent').value.trim();
-        if (title === "" || content === "") { alert("Please complete notice fields!"); return; }
-        
-        schoolNotices.unshift({ title: "📢 " + title, content: content });
-        document.getElementById('noticeTitle').value = "";
-        document.getElementById('noticeContent').value = "";
-        alert("Notice published successfully!");
-    }
-
-    function renderStudentProfile() {
-        const p = document.getElementById('studentNoticePanel');
-        if(!p) return;
-        p.innerHTML = "";
-        schoolNotices.forEach(n => {
-            p.innerHTML += `<div class="notice-box"><strong>${n.title}</strong><p style="margin:5px 0 0 0; font-size:14px; color:#475569;">${n.content}</p></div>`;
-        });
-    }
-</script>
+            if(!name || !phone) return alert("Please fill out all onboarding fields.");
