@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Coaching Hub Ultimate Pro</title>
+    <title>Smart Coaching Hub Pro Ultimate</title>
     <style>
-        /* Premium Midnight Theme CSS Setup */
+        /* Premium Midnight Theme CSS Layout Setup */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background-color: #0b0f19; color: #f3f4f6; padding-bottom: 95px; }
         
@@ -28,13 +28,13 @@
         
         .item-card { background: #1f2937; border: 1px solid #374151; padding: 12px; border-radius: 10px; margin-bottom: 10px; }
         
-        /* BATCH & FINANCE TRACKER GRID */
+        /* BATCH SIZE TRACKER GRID BLOCK */
         .batch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 15px; }
         .batch-box { background: #111827; border: 1px solid #374151; padding: 8px; border-radius: 8px; text-align: center; }
         .batch-title { font-size: 9px; font-weight: bold; color: #9ca3af; text-transform: uppercase; }
         .batch-count { font-size: 14px; font-weight: 800; margin-top: 2px; }
 
-        /* AI CHAT STYLES */
+        /* AI CHAT VIEWPORT STYLES */
         .chat-box { background: #111827; border: 1px solid #374151; border-radius: 10px; height: 200px; overflow-y: auto; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
         .msg { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 13px; line-height: 1.4; }
         .msg.user { background: #6366f1; color: white; align-self: flex-end; border-bottom-right-radius: 0; }
@@ -47,7 +47,7 @@
         .btn-p.active { background: #10b981; }
         .btn-a.active { background: #ef4444; }
 
-        /* PRINTABLE DOCUMENT FACTORY STYLES */
+        /* FACTORY PRINT CONFIGURATIONS */
         .doc-preview-area { background: #fff; color: #000; padding: 20px; border-radius: 8px; margin-top: 15px; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .id-card { border: 2px solid #6366f1; padding: 15px; border-radius: 8px; text-align: center; max-width: 250px; margin: 0 auto; background: #fff; color: #000; }
         .id-card-header { background: #6366f1; color: #fff; padding: 6px; font-weight: bold; font-size: 14px; border-radius: 4px; margin-bottom: 10px; }
@@ -55,13 +55,13 @@
         .report-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
         .report-table th, .report-table td { border: 1px solid #ccc; padding: 6px; text-align: left; }
 
-        /* FEE RECEIPT PDF FORMAT LAYOUT */
+        /* FEES RECEIPT LAYOUT */
         .receipt-box { border: 2px dashed #10b981; padding: 20px; background: #ffffff; color: #000000; font-size: 13px; border-radius: 6px; line-height: 1.6; }
         .receipt-header { border-bottom: 2px dashed #10b981; text-align: center; padding-bottom: 8px; margin-bottom: 12px; }
         .receipt-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
 
-        /* FIXED FLOATING NAVIGATION MENU BAR AT THE BOTTOM */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #111827; border-top: 1px solid #1f2937; padding: 12px 0; z-index: 1000; display: none; }
+        /* BOTTOM FLOATING FIXED APP BAR */
+        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #111827; border-top: 1px solid #1f2937; padding: 12px 0; z-index: 1000; }
         .nav-wrapper { max-width: 500px; margin: 0 auto; display: flex; justify-content: space-around; }
         .nav-btn { background: none; border: none; color: #9ca3af; font-size: 11px; font-weight: 500; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 20%; }
         .nav-btn.active { color: #6366f1; font-weight: bold; }
@@ -82,21 +82,8 @@
 
     <main class="app-container">
 
-        <!-- TEACHER LOGIN SECURITY SCREEN -->
-        <section id="screen-login" class="app-screen active" style="margin-top: 50px;">
-            <h2>🔐 Teacher Access Verification</h2>
-            <div class="item-card">
-                <div class="form-group">
-                    <label>Enter Secret Teacher Password</label>
-                    <input id="teacher-password-input" type="password" placeholder="••••••••">
-                </div>
-                <button onclick="verifyTeacherLogin()" class="btn-primary">Unlock Application</button>
-                <p id="login-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 8px; display: none; text-align: center; font-weight: 600;">❌ Incorrect Password! Access Denied.</p>
-            </div>
-        </section>
-
-        <!-- SCREEN 1: ADMISSION SECTION & TRACKERS -->
-        <section id="screen-students" class="app-screen">
+        <!-- SCREEN 1: HOME ADMISSION SECTION (DIRECT ACCESS) -->
+        <section id="screen-students" class="app-screen active">
             <h2>📊 Live Batch Size Tracker</h2>
             <div class="batch-grid" style="grid-template-columns: 1fr 1fr; gap:8px;">
                 <div class="batch-box"><span class="batch-title">Morning Batch</span><div class="batch-count" id="count-morning" style="color:#10b981;">1 Students</div></div>
@@ -119,30 +106,40 @@
             <div id="master-student-list"></div>
         </section>
 
-        <!-- SCREEN 2: FINANCE CONTROL & PDF RECEIPT PRINTER -->
-        <section id="screen-finance" class="app-screen">
-            <h2>💰 Institutional Finance Ledgers</h2>
-            <div class="batch-grid">
-                <div class="batch-box"><span class="batch-title">Projected</span><div class="batch-count" style="color:#6366f1;" id="m-total">₹20,000</div></div>
-                <div class="batch-box"><span class="batch-title">Collected</span><div class="batch-count" style="color:#10b981;" id="m-paid">₹11,000</div></div>
-                <div class="batch-box"><span class="batch-title">Pending Dues</span><div class="batch-count" style="color:#ef4444;" id="m-dues">₹9,000</div></div>
+        <!-- SCREEN 2: 24x7 AI DOUBT SUPPORT (DIRECT ACCESS) -->
+        <section id="screen-ai" class="app-screen">
+            <h2>🤖 24x7 AI Doubt Support (Free)</h2>
+            <div class="chat-box" id="ai-chat-viewport">
+                <div class="msg ai">Hello! I am your AI Coaching Assistant. Type any academic doubt, and I will resolve it instantly!</div>
             </div>
-
-            <h2>💵 Process Payment & Generate PDF Receipt</h2>
-            <div class="item-card">
-                <div class="form-group">
-                    <label>Select Student Target</label>
-                    <select id="fee-student-select"></select>
-                </div>
-                <div class="form-group">
-                    <label>Amount Received (₹)</label>
-                    <input id="fee-amount-input" type="number" placeholder="e.g. 2000">
-                </div>
-                <button onclick="processFeePayment()" class="btn-primary" style="background:#10b981;">Log Entry & Create Receipt</button>
+            <div style="display: flex; gap: 6px;">
+                <input type="text" id="ai-input-box" placeholder="Type your doubt here...">
+                <button onclick="askAIEngine()" class="btn-action" style="background:#6366f1; font-weight:bold; padding:0 15px;">Ask AI</button>
             </div>
-
-            <h2>📋 Active Fee Accounts Status</h2>
-            <div id="ledger-list-container"></div>
         </section>
 
-        <!-- SCREEN 3: 24x7 AI DOUBT SUPPORT -->
+        <!-- NEW REWRITTEN SCREEN 3: TEACHER ADMIN PANEL (LOCK SYSTEM) -->
+        <section id="screen-admin" class="app-screen">
+            <div id="lock-login-container">
+                <h2>🔐 Teacher Authentication Required</h2>
+                <div class="item-card">
+                    <div class="form-group">
+                        <label>Enter Secret Teacher Password</label>
+                        <input id="teacher-password-input" type="password" placeholder="••••••••">
+                    </div>
+                    <button onclick="verifyTeacherLogin()" class="btn-primary">Unlock Advanced Tabs</button>
+                    <p id="login-error-msg" style="color: #ef4444; font-size: 12px; margin-top: 8px; display: none; text-align: center; font-weight: 600;">❌ Incorrect Password! Access Denied.</p>
+                </div>
+            </div>
+
+            <div id="advanced-admin-content" style="display: none;">
+                <h2>⚙️ Advanced Teacher Management</h2>
+                <div class="item-card" style="background: #10b981; color: white; padding: 10px; text-align: center; border-radius: 6px; font-weight: bold; margin-bottom: 15px;">
+                    ✅ Premium Access Unlocked!
+                </div>
+                <p style="font-size: 12px; color: #9ca3af; margin-bottom: 10px;">Advanced features like Finance Sheets, Document Factories, and Attendance Registers are now fully operational using the bottom navigation menu.</p>
+            </div>
+        </section>
+
+        <!-- SCREEN 4: FINANCE CONTROL & PDF RECEIPT PRINTER (LOCKED) -->
+        <section id="screen-finance" class="app-screen">
