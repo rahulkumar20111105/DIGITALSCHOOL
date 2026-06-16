@@ -3,148 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBA TECH - Staff Management Suite</title>
-    <!-- Tailwind CSS for modern design styling -->
+    <title>TBA TECH - Management Dashboard</title>
+    <!-- Tailwind CSS Script -->
     <script src="https://jsdelivr.net"></script>
     <style>
+        /* Dedicated styles to manage clean hardware card prints */
         @media print {
             body * { visibility: hidden; }
-            #printableIdCard, #printableIdCard * { visibility: visible; }
-            #printableIdCard { position: absolute; left: 0; top: 0; width: 100%; }
+            #idCardPrintBox, #idCardPrintBox * { visibility: visible; }
+            #idCardPrintBox { position: absolute; left: 50%; top: 40px; transform: translateX(-50%); width: 3.375in; height: 2.125in; }
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen pb-12">
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-16 selection:bg-cyan-500 selection:text-slate-900">
 
-    <!-- Header Navigation -->
-    <header class="bg-slate-950 border-b border-slate-800 p-5 shadow-xl">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-black tracking-wider text-cyan-400">TBA TECH</h1>
-            <span class="bg-cyan-950 text-cyan-400 text-xs px-3 py-1 rounded-full font-bold border border-cyan-800">ADMIN PORTAL</span>
+    <!-- Top Accent Bar & Brand Banner Navigation -->
+    <header class="bg-slate-950 border-b border-slate-800 shadow-2xl p-6 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-cyan-500 to-indigo-600 font-black text-slate-950 px-4 py-2 rounded-xl text-xl tracking-tight shadow-md">TB</div>
+                <h1 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-400 to-indigo-400">TBA TECH</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="bg-cyan-950/80 text-cyan-400 text-xs px-3 py-1.5 rounded-full font-bold border border-cyan-800/60 tracking-widest uppercase">Agent Network Command</span>
+            </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        <!-- Left Column: Registration Form -->
-        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-md h-fit">
-            <h2 class="text-lg font-bold text-slate-200 mb-4 border-b border-slate-800 pb-2">1. Register New Staff</h2>
-            <form id="staffForm" class="space-y-4 text-slate-900" onsubmit="registerStaff(event)">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Employee ID</label>
-                    <input type="text" id="empId" placeholder="e.g. TBA001" required class="w-full bg-slate-800 text-slate-100 border border-slate-700 rounded-xl p-2.5 focus:outline-none focus:border-cyan-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Full Name</label>
-                    <input type="text" id="empName" placeholder="Rahul Kumar" required class="w-full bg-slate-800 text-slate-100 border border-slate-700 rounded-xl p-2.5 focus:outline-none focus:border-cyan-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Designation</label>
-                    <input type="text" id="empRole" placeholder="Field Agent" required class="w-full bg-slate-800 text-slate-100 border border-slate-700 rounded-xl p-2.5 focus:outline-none focus:border-cyan-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Phone Number</label>
-                    <input type="text" id="empPhone" placeholder="9876543210" required class="w-full bg-slate-800 text-slate-100 border border-slate-700 rounded-xl p-2.5 focus:outline-none focus:border-cyan-500">
-                </div>
-                <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold p-3 rounded-xl transition duration-200 shadow-lg cursor-pointer">Add Staff Member</button>
-            </form>
-        </div>
+    <main class="max-w-7xl mx-auto px-4 mt-8 space-y-8">
 
-        <!-- Center/Right Columns: Staff Database & Task Tracker -->
-        <div class="md:col-span-2 space-y-8">
+        <!-- 1. METRIC COUNTERS SECTION (ID COLLECTION TRACKING) -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Active Agents</p>
+                    <h3 id="countTotalStaff" class="text-3xl font-black text-slate-100 mt-1">0</h3>
+                </div>
+                <div class="bg-cyan-950 p-3 rounded-xl border border-cyan-800/50 text-cyan-400 text-xl font-bold">👥</div>
+            </div>
+            <div class="bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pending Tasks</p>
+                    <h3 id="countPending" class="text-3xl font-black text-amber-400 mt-1">0</h3>
+                </div>
+                <div class="bg-amber-950/60 p-3 rounded-xl border border-amber-900/50 text-amber-400 text-xl font-bold">⏳</div>
+            </div>
+            <div class="bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Deployments</p>
+                    <h3 id="countProgress" class="text-3xl font-black text-emerald-400 mt-1">0</h3>
+                </div>
+                <div class="bg-emerald-950/60 p-3 rounded-xl border border-emerald-900/50 text-emerald-400 text-xl font-bold">⚙️</div>
+            </div>
+            <div class="bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ID Cards Printed</p>
+                    <h3 id="countPrinted" class="text-3xl font-black text-indigo-400 mt-1">0</h3>
+                </div>
+                <div class="bg-indigo-950/60 p-3 rounded-xl border border-indigo-900/50 text-indigo-400 text-xl font-bold">🖨️</div>
+            </div>
+        </section>
+
+        <!-- Main Panel Split Grid Structure -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Database Records -->
-            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-md">
-                <h2 class="text-lg font-bold text-slate-200 mb-4 border-b border-slate-800 pb-2">2. Team Directory & Workflow Tracker</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-slate-800 text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                                <th class="py-3 px-2">ID</th>
-                                <th class="py-3 px-2">Name / Role</th>
-                                <th class="py-3 px-2">Current Assigned Work</th>
-                                <th class="py-3 px-2">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="staffTableBody" class="text-sm divide-y divide-slate-900">
-                            <!-- JS Inject dynamic records here -->
-                            <tr>
-                                <td colspan="4" class="text-center py-8 text-slate-500 italic">No registered staff records found. Add staff on the left panel.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Left Side Operations Panel: Registration Form -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl h-fit space-y-6">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-200 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <span class="text-cyan-400">📝</span> 1. Agent Entry Module
+                    </h2>
                 </div>
-            </div>
-
-            <!-- Dynamic Live ID Card Preview Panel -->
-            <div id="idCardPreviewSection" class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-md hidden flex flex-col items-center">
-                <h2 class="text-lg font-bold text-slate-200 mb-6 w-full border-b border-slate-800 pb-2">3. Digital ID Card Live Generator</h2>
-                
-                <!-- Physical Card Blueprint Box -->
-                <div id="printableIdCard" class="w-72 bg-gradient-to-b from-slate-950 to-slate-900 border-4 border-cyan-500 rounded-2xl p-5 shadow-2xl text-center font-sans">
-                    <div class="text-xl font-black tracking-widest text-cyan-400 border-b border-slate-800 pb-2">TBA TECH</div>
-                    <div class="text-[10px] font-bold tracking-widest text-slate-400 uppercase mt-1 mb-4">Staff Identity Card</div>
-                    
-                    <!-- Avatar placeholder -->
-                    <div class="w-24 h-24 bg-slate-800 border-2 border-slate-700 mx-auto rounded-full flex items-center justify-center text-slate-500 font-bold text-xs shadow-inner mb-4">PHOTO BOX</div>
-                    
-                    <div class="space-y-1.5 text-left text-xs px-2 mb-6">
-                        <p class="text-slate-400"><strong class="text-slate-200 uppercase tracking-wide">Emp ID:</strong> <span id="cardId" class="text-cyan-400 font-mono">--</span></p>
-                        <p class="text-slate-400"><strong class="text-slate-200 uppercase tracking-wide">Name:</strong> <span id="cardName" class="text-slate-100 font-semibold">--</span></p>
-                        <p class="text-slate-400"><strong class="text-slate-200 uppercase tracking-wide">Role:</strong> <span id="cardRole" class="text-slate-300">--</span></p>
-                        <p class="text-slate-400"><strong class="text-slate-200 uppercase tracking-wide">Phone:</strong> <span id="cardPhone" class="text-slate-300">--</span></p>
+                <form id="agentForm" class="space-y-4" onsubmit="createNewAgentRecord(event)">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Employee ID</label>
+                        <input type="text" id="formId" placeholder="e.g. TBA-789" required class="w-full bg-slate-900 text-slate-100 border border-slate-800 rounded-xl p-3 focus:outline-none focus:border-cyan-500 font-mono transition duration-150">
                     </div>
-                    
-                    <div class="border-t border-slate-800 pt-2 text-[10px] font-semibold text-slate-500 tracking-wider">Authorized Signatory | TBA TECH</div>
-                </div>
-
-                <button onclick="window.print()" class="mt-6 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-6 py-2.5 rounded-xl transition duration-200 shadow-md cursor-pointer flex items-center gap-2">
-                    Print ID Card
-                </button>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Full Name</label>
+                        <input type="text" id="formName" placeholder="Amit Sharma" required class="w-full bg-slate-900 text-slate-100 border border-slate-800 rounded-xl p-3 focus:outline-none focus:border-cyan-500 transition duration-150">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Job Designation</label>
+                        <input type="text" id="formRole" placeholder="School Data Collection Head" required class="w-full bg-slate-900 text-slate-100 border border-slate-800 rounded-xl p-3 focus:outline-none focus:border-cyan-500 transition duration-150">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Mobile Number</label>
+                        <input type="text" id="formPhone" placeholder="987654XXXX" required class="w-full bg-slate-900 text-slate-100 border border-slate-800 rounded-xl p-3 focus:outline-none focus:border-cyan-500 font-mono transition duration-150">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-slate-950 font-black p-3.5 rounded-xl transition duration-300 shadow-md cursor-pointer transform hover:-translate-y-0.5 tracking-wider uppercase text-xs">Save Agent Record</button>
+                </form>
             </div>
 
-        </div>
-    </main>
+            <!-- Right Side Operations Panels -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- 2. STAFF AND AGENT WORK DIRECTORY -->
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <h2 class="text-lg font-bold text-slate-200 mb-4 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <span class="text-teal-400">📊</span> 2. All Staff Detailed Directory Matrix
+                    </h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-800 text-xs font-bold tracking-wider text-slate-400 uppercase">
+                                    <th class="py-3 px-3">Identity Code</th>
+                                    <th class="py-3 px-3">Staff Profile</th>
+                                    <th class="py-3 px-3">Assigned Work Scope</th>
+                                    <th class="py-3 px-3 text-right">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="directoryTableBody" class="text-sm divide-y divide-slate-900/60">
+                                <tr>
+                                    <td colspan="4" class="text-center py-10 text-slate-500 italic">No registered staff records found. Map your field staff registry using the entry panel.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-    <!-- App Business Operations JavaScript Logics -->
-    <script>
-        let staffDatabase = [];
-
-        function registerStaff(e) {
-            e.preventDefault();
-            const id = document.getElementById('empId').value.trim();
-            const name = document.getElementById('empName').value.trim();
-            const role = document.getElementById('empRole').value.trim();
-            const phone = document.getElementById('empPhone').value.trim();
-
-            if (staffDatabase.some(emp => emp.id === id)) {
-                alert("❌ Employee ID already exists in system!");
-                return;
-            }
-
-            staffDatabase.push({ id, name, role, phone, task: 'No Task Assigned', status: 'Pending' });
-            document.getElementById('staffForm').reset();
-            renderTable();
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('staffTableBody');
-            if (staffDatabase.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-500 italic">No registered staff records found. Add staff on the left panel.</td></tr>`;
-                document.getElementById('idCardPreviewSection').classList.add('hidden');
-                return;
-            }
-
-            tbody.innerHTML = staffDatabase.map((emp, index) => `
-                <tr class="hover:bg-slate-900/50 transition">
-                    <td class="py-4 px-2 font-mono text-cyan-400 font-bold">${emp.id}</td>
-                    <td class="py-4 px-2">
-                        <div class="font-bold text-slate-100">${emp.name}</div>
-                        <div class="text-xs text-slate-400">${emp.role}</div>
-                    </td>
-                    <td class="py-4 px-2">
-                        <div class="text-xs max-w-[200px] truncate text-slate-300" title="${emp.task}">${emp.task}</div>
-                        <span class="inline-block text-[10px] font-extrabold tracking-wider px-2 py-0.5 rounded-full mt-1 ${emp.status === 'Pending' ? 'bg-amber-950/80 text-amber-400 border border-amber-800' : 'bg-emerald-950/80 text-emerald-400 border border-emerald-800'}">${emp.status}</span>
-                    </td>
-                    <td class="py-4 px-2 space-y-2 lg:space-y-0 lg:space-x-1 flex flex-col lg:flex-row">
-                        <button onclick="assignTaskPrompt('${emp.id}')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2 py-1 rounded-lg cursor-pointer transition">Task</button>
+                <!-- 3. IDENTITY CARD PRINT PREVIEW ENGINE WITH SECURITY SYSTEM -->
+                <div id="printPreviewSection" class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl hidden flex flex-col items-center relative min-h-[300px]">
+                    <h2 class="text-lg font-bold text-slate-200 mb-6 w-full border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <span class="text-indigo-400">🖨️</span> 3. Training Hub Badge Print Queue
+                    </h2>
+                    
+                    <!-- PASSWORD PROTECTION GATE OVERLAY -->
+                    <div id="trainingHubAuthOverlay" class="absolute inset-x-0 bottom-0 top-12 bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center p-6 z-40 rounded-b-2xl">
+                        <div class="max-w-sm text-center space-y-4">
+                            <div class="text-3xl">🔐</div>
+                            <h3 class="text-md font-bold text-slate-200 tracking-wide uppercase">Training Hub Gateway</h3>
+                            <p class="text-xs text-slate-400">Input authorized corporate passkey code credentials to unlock ID generation components and printable media formatting wrappers.</p>
+                            <div class="flex gap-2">
