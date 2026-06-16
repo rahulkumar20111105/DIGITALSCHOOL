@@ -3,157 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Coaching Hub Pro</title>
+    <title>TBA TECH - Staff Management Suite</title>
+    <!-- Tailwind CSS for modern design styling -->
+    <script src="https://jsdelivr.net"></script>
     <style>
-        /* Modern Premium Midnight CSS Configuration */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: #0b0f19; color: #f3f4f6; padding-bottom: 95px; }
-        header { background: #111827; padding: 16px; text-align: center; border-bottom: 2px solid #1f2937; }
-        header h1 { color: #6366f1; font-size: 20px; font-weight: 700; }
-        
-        .app-container { max-width: 500px; padding: 0 12px; margin: 0 auto; }
-        
-        /* Fixed Grid Display Screens Engine */
-        .app-screen { display: none; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 14px; margin-top: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
-        .app-screen.active { display: block !important; }
-        
-        h2 { font-size: 14px; margin-bottom: 12px; color: #ffffff; border-left: 4px solid #6366f1; padding-left: 6px; text-transform: uppercase; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 10px; color: #9ca3af; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; }
-        input, select { width: 100%; background: #1f2937; border: 1px solid #374151; color: #ffffff; padding: 11px; border-radius: 8px; font-size: 13px; outline: none; }
-        
-        .btn-primary { width: 100%; background: #6366f1; color: #ffffff; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 5px; }
-        .btn-action { background: #1f2937; color: #ffffff; border: 1px solid #374151; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
-        .item-card { background: #1f2937; border: 1px solid #374151; padding: 12px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; }
-        
-        .attendance-actions { display: flex; gap: 6px; margin-top: 8px; }
-        .btn-p, .btn-a { padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; border: none; color: white; width: 50%; }
-        .btn-p { background: #374151; }
-        .btn-a { background: #374151; }
-        .btn-p.active { background: #10b981; }
-        .btn-a.active { background: #ef4444; }
-
-        .doc-preview-area { background: #fff; color: #000; padding: 20px; border-radius: 8px; margin-top: 15px; display: none; }
-        .id-card { border: 2px solid #6366f1; padding: 15px; border-radius: 8px; text-align: center; max-width: 230px; margin: 0 auto; background: #fff; color: #000; }
-        .id-card-header { background: #6366f1; color: #fff; padding: 5px; font-weight: bold; font-size: 12px; border-radius: 4px; margin-bottom: 10px; text-transform: uppercase; }
-        .receipt-box { border: 2px dashed #10b981; padding: 15px; background: #ffffff; color: #000000; font-size: 13px; border-radius: 6px; }
-        .receipt-header { border-bottom: 2px dashed #10b981; text-align: center; padding-bottom: 6px; margin-bottom: 10px; font-weight: bold; }
-        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
-
-        .chat-box { background: #111827; border: 1px solid #374151; border-radius: 10px; height: 180px; overflow-y: auto; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 12px; }
-        .msg.user { background: #6366f1; color: white; align-self: flex-end; }
-        .msg.ai { background: #1f2937; color: #f3f4f6; align-self: flex-start; border: 1px solid #374151; }
-
-        /* FIXED FLOATING APP BOTTOM NAVIGATION MENU BAR (100% RELIABLE) */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #111827; border-top: 1px solid #1f2937; padding: 12px 0; z-index: 99999; display: block !important; }
-        .nav-wrapper { max-width: 500px; margin: 0 auto; display: flex; justify-content: space-around; }
-        .nav-btn { background: none; border: none; color: #9ca3af; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 20%; font-weight: 500; }
-        .nav-btn.active { color: #6366f1; font-weight: bold; }
-        .nav-btn span { font-size: 16px; display: block; margin-bottom: 2px; }
-
         @media print {
-            body { background: white; color: black; padding: 0; }
-            nav, header, h2, .item-card, .btn-primary { display: none !important; }
-            .doc-preview-area { display: block !important; }
+            body * { visibility: hidden; }
+            #printableIdCard, #printableIdCard * { visibility: visible; }
+            #printableIdCard { position: absolute; left: 0; top: 0; width: 100%; }
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen pb-12">
 
-    <header>
-        <h1>Smart Coaching Hub Pro</h1>
+    <!-- Header Navigation -->
+    <header class="bg-slate-950 border-b border-slate-800 p-5 shadow-xl">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-black tracking-wider text-cyan-400">TBA TECH</h1>
+            <span class="bg-cyan-950 text-cyan-400 text-xs px-3 py-1 rounded-full font-bold border border-cyan-800">ADMIN PORTAL</span>
+        </div>
     </header>
 
-    <main class="app-container">
-        <!-- 1. ADMISSION TAB SCREEN -->
-        <section id="screen-students" class="app-screen active">
-            <h2>👤 Student Admission Form</h2>
-            <div class="item-card">
-                <div class="form-group"><label>Student Full Name</label><input id="form-name" type="text" placeholder="e.g. Rahul Kumar"></div>
-                <div class="form-group"><label>Parent Phone Number</label><input id="form-phone" type="tel" placeholder="e.g. 9708183956"></div>
-                <button onclick="admitStudent()" class="btn-primary">Enroll & Generate ID</button>
-            </div>
-            <h2>👥 Registered Base</h2>
-            <div id="master-student-list"></div>
-        </section>
+    <main class="max-w-6xl mx-auto px-4 mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Left Column: Registration Form -->
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-md h-fit">
+            <h2 class="text-lg font-bold text-slate-200 mb-4 border-b border-slate-800 pb-2">1. Register New Staff</h2>
+            <form id="staffForm" class="space-y-4 text-slate-900" onsubmit="registerStaff(event)">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Employee ID</label>
+                    <input type="text" id="empId" placeholder="e.g. TBA001" required class="w-full bg-slate-800 text-slate-100 border border-slate-700 rounded-xl p-2.5 focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Full Name</label>
+                    <input type="text" id="empName" placeholder="Rahul Kumar" required class="w-full bg-slate-800 text-slate-100 border border-slate-700 rounded-xl p-2.5 focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Designation</label>
+                    <input type="text" id="empRole" placeholder="Field Agent" required class="w-full bg-slate-800 text-slate-100 border border-slate-700 rounded-xl p-2.5 focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Phone Number</label>
+                    <input type="text" id="empPhone" placeholder="9876543210" required class="w-full bg-slate-800 text-slate-100 border border-slate-700 rounded-xl p-2.5 focus:outline-none focus:border-cyan-500">
+                </div>
+                <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold p-3 rounded-xl transition duration-200 shadow-lg cursor-pointer">Add Staff Member</button>
+            </form>
+        </div>
 
-        <!-- 2. FINANCE TAB SCREEN -->
-        <section id="screen-finance" class="app-screen">
-            <h2>💰 Fee Ledger and Accounts</h2>
-            <div class="item-card">
-                <div class="form-group"><label>Select Student Target</label><select id="fee-student-select"></select></div>
-                <div class="form-group"><label>Amount Received (₹)</label><input id="fee-amount-input" type="number" placeholder="e.g. 2000"></div>
-                <button onclick="processFeePayment()" class="btn-primary" style="background:#10b981;">Create Invoice Receipt</button>
+        <!-- Center/Right Columns: Staff Database & Task Tracker -->
+        <div class="md:col-span-2 space-y-8">
+            
+            <!-- Database Records -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-md">
+                <h2 class="text-lg font-bold text-slate-200 mb-4 border-b border-slate-800 pb-2">2. Team Directory & Workflow Tracker</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                                <th class="py-3 px-2">ID</th>
+                                <th class="py-3 px-2">Name / Role</th>
+                                <th class="py-3 px-2">Current Assigned Work</th>
+                                <th class="py-3 px-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffTableBody" class="text-sm divide-y divide-slate-900">
+                            <!-- JS Inject dynamic records here -->
+                            <tr>
+                                <td colspan="4" class="text-center py-8 text-slate-500 italic">No registered staff records found. Add staff on the left panel.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <h2>📋 Active Fee Statement Accounts</h2>
-            <div id="ledger-list-container"></div>
-        </section>
 
-        <!-- 3. AI DOUBT SUPPORT SCREEN -->
-        <section id="screen-ai" class="app-screen">
-            <h2>🤖 24x7 AI Doubt Support</h2>
-            <div class="chat-box" id="ai-box-viewport">
-                <div class="msg ai">Hello! Type any academic doubt, and I will resolve it instantly!</div>
+            <!-- Dynamic Live ID Card Preview Panel -->
+            <div id="idCardPreviewSection" class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-md hidden flex flex-col items-center">
+                <h2 class="text-lg font-bold text-slate-200 mb-6 w-full border-b border-slate-800 pb-2">3. Digital ID Card Live Generator</h2>
+                
+                <!-- Physical Card Blueprint Box -->
+                <div id="printableIdCard" class="w-72 bg-gradient-to-b from-slate-950 to-slate-900 border-4 border-cyan-500 rounded-2xl p-5 shadow-2xl text-center font-sans">
+                    <div class="text-xl font-black tracking-widest text-cyan-400 border-b border-slate-800 pb-2">TBA TECH</div>
+                    <div class="text-[10px] font-bold tracking-widest text-slate-400 uppercase mt-1 mb-4">Staff Identity Card</div>
+                    
+                    <!-- Avatar placeholder -->
+                    <div class="w-24 h-24 bg-slate-800 border-2 border-slate-700 mx-auto rounded-full flex items-center justify-center text-slate-500 font-bold text-xs shadow-inner mb-4">PHOTO BOX</div>
+                    
+                    <div class="space-y-1.5 text-left text-xs px-2 mb-6">
+                        <p class="text-slate-400"><strong class="text-slate-200 uppercase tracking-wide">Emp ID:</strong> <span id="cardId" class="text-cyan-400 font-mono">--</span></p>
+                        <p class="text-slate-400"><strong class="text-slate-200 uppercase tracking-wide">Name:</strong> <span id="cardName" class="text-slate-100 font-semibold">--</span></p>
+                        <p class="text-slate-400"><strong class="text-slate-200 uppercase tracking-wide">Role:</strong> <span id="cardRole" class="text-slate-300">--</span></p>
+                        <p class="text-slate-400"><strong class="text-slate-200 uppercase tracking-wide">Phone:</strong> <span id="cardPhone" class="text-slate-300">--</span></p>
+                    </div>
+                    
+                    <div class="border-t border-slate-800 pt-2 text-[10px] font-semibold text-slate-500 tracking-wider">Authorized Signatory | TBA TECH</div>
+                </div>
+
+                <button onclick="window.print()" class="mt-6 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-6 py-2.5 rounded-xl transition duration-200 shadow-md cursor-pointer flex items-center gap-2">
+                    Print ID Card
+                </button>
             </div>
-            <div style="display:flex; gap:6px;">
-                <input type="text" id="ai-input-box" placeholder="Ask any physics, chemistry or maths question...">
-                <button onclick="askAIEngine()" class="btn-primary" style="margin:0; width:80px;">Ask</button>
-            </div>
-        </section>
 
-        <!-- 4. DOCUMENT FACTORY TEMPLATE PRINTER -->
-        <section id="screen-docs" class="app-screen">
-            <h2>🗂️ Document Factory Templates</h2>
-            <div class="item-card">
-                <div class="form-group"><label>Select Target Student</label><select id="doc-student-select"></select></div>
-                <button onclick="printStudentIDCard()" class="btn-primary">Generate Printable ID Card</button>
-            </div>
-        </section>
-
-        <!-- CENTRAL PRINT Engine FRAME VIEWPORT -->
-        <div id="document-print-viewport" class="doc-preview-area"></div>
-        <button id="btn-print-trigger" onclick="window.print()" class="btn-primary" style="background:#000; display:none; margin-bottom:20px; border:1px solid #374151;">🖨 Download PDF Document</button>
-
-        <!-- 5. ATTENDANCE MONITORING PANEL -->
-        <section id="screen-attendance" class="app-screen">
-            <h2>Attendance Monitoring Sheets</h2>
-            <div id="attendance-list-container"></div>
-        </section>
+        </div>
     </main>
 
-    <!-- FIXED IMMERSIVE BOTTOM TAB BAR NAVIGATION MENU -->
-    <nav>
-        <div class="nav-wrapper">
-            <button onclick="switchTab('students')" id="nav-students" class="nav-btn active"><span>👥</span>Admission</button>
-            <button onclick="switchTab('finance')" id="nav-finance" class="nav-btn"><span>💰</span>Finance</button>
-            <button onclick="switchTab('ai')" id="nav-ai" class="nav-btn"><span>🤖</span>AI Doubt</button>
-            <button onclick="switchTab('docs')" id="nav-docs" class="nav-btn"><span>🗂️</span>Doc Factory</button>
-            <button onclick="switchTab('attendance')" id="nav-attendance" class="nav-btn"><span>📋</span>Attendance</button>
-        </div>
-    </nav>
-
+    <!-- App Business Operations JavaScript Logics -->
     <script>
-        // App Central Data Store Memory State
-        let students = [
-            { id: "COACH-001", name: "Rahul Maurya", phone: "919708183956", attendance: "Not Marked", totalFees: 10000, paidFees: 7000 },
-            { id: "COACH-002", name: "Amit Singh", phone: "918888888888", attendance: "Not Marked", totalFees: 10000, paidFees: 4000 }
-        ];
+        let staffDatabase = [];
 
-        // Core Fix: Tab Switch Routing logic without inline attributes block errors
-        function switchTab(tabId) {
-            let screens = document.querySelectorAll('.app-screen');
-            for(let i=0; i<screens.length; i++) {
-                screens[i].style.setProperty('display', 'none', 'important');
+        function registerStaff(e) {
+            e.preventDefault();
+            const id = document.getElementById('empId').value.trim();
+            const name = document.getElementById('empName').value.trim();
+            const role = document.getElementById('empRole').value.trim();
+            const phone = document.getElementById('empPhone').value.trim();
+
+            if (staffDatabase.some(emp => emp.id === id)) {
+                alert("❌ Employee ID already exists in system!");
+                return;
             }
-            
-            let targetScreen = document.getElementById('screen-' + tabId);
-            if(targetScreen) {
-                targetScreen.style.setProperty('display', 'block', 'important');
+
+            staffDatabase.push({ id, name, role, phone, task: 'No Task Assigned', status: 'Pending' });
+            document.getElementById('staffForm').reset();
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('staffTableBody');
+            if (staffDatabase.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-500 italic">No registered staff records found. Add staff on the left panel.</td></tr>`;
+                document.getElementById('idCardPreviewSection').classList.add('hidden');
+                return;
             }
-            
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            let targetBtn = document.getElementById('nav-' + tabId);
-            if(targetBtn) targetBtn.classList.add('active');
-            
-            document.getElementById('document-print-viewport').style.display = "none";
+
+            tbody.innerHTML = staffDatabase.map((emp, index) => `
+                <tr class="hover:bg-slate-900/50 transition">
+                    <td class="py-4 px-2 font-mono text-cyan-400 font-bold">${emp.id}</td>
+                    <td class="py-4 px-2">
+                        <div class="font-bold text-slate-100">${emp.name}</div>
+                        <div class="text-xs text-slate-400">${emp.role}</div>
+                    </td>
+                    <td class="py-4 px-2">
+                        <div class="text-xs max-w-[200px] truncate text-slate-300" title="${emp.task}">${emp.task}</div>
+                        <span class="inline-block text-[10px] font-extrabold tracking-wider px-2 py-0.5 rounded-full mt-1 ${emp.status === 'Pending' ? 'bg-amber-950/80 text-amber-400 border border-amber-800' : 'bg-emerald-950/80 text-emerald-400 border border-emerald-800'}">${emp.status}</span>
+                    </td>
+                    <td class="py-4 px-2 space-y-2 lg:space-y-0 lg:space-x-1 flex flex-col lg:flex-row">
+                        <button onclick="assignTaskPrompt('${emp.id}')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2 py-1 rounded-lg cursor-pointer transition">Task</button>
